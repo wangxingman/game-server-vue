@@ -38,7 +38,6 @@ export const init = (axios, ElementUI) => {
     axios.defaults.withCredentials = true;
     router.beforeEach((to, from, next) => {
         let login = store.state.main.login;
-        login= true;
         if (from.path == '/' && to.path != '/login') {
             if (!login) {
                 next('/login');
