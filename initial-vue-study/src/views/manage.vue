@@ -2,18 +2,32 @@
     <div class="manage_page fillcontain">
         <el-row style="height: 100%;">
             <el-col :span="4" style="min-height: 100%; background-color:darkgray;">
-                <el-menu :default-active="defaultActive" style="min-height: 100%;" background-color="silver"
+                <el-menu style="min-height: 100%;" background-color="silver"
                          text-color="navy" theme="dark" router>
-                    <el-menu-item index="manage"><i class="el-icon-menu"></i><span style="color: black;font-weight: bold;font-size: 18px">首页</span></el-menu-item>
-                    <el-submenu index="2">
-                        <template slot="title"><i class="el-icon-document"></i><span style="color: black;font-weight: bold;font-size: 15px">数据管理</span></template>
-                        <el-menu-item index="userList"><span style="color: black;font-size: 15px">用户列表</span></el-menu-item>
-                        <el-menu-item index="shopList"><span style="color: black;font-size: 15px">商家列表</span></el-menu-item>
-                        <el-menu-item index="foodList"><span style="color: black; font-size: 15px">食品列表</span></el-menu-item>
-                    </el-submenu>
+                    <el-menu-item><i class="el-icon-menu"></i><span
+                            style="color: black;font-weight: bold;font-size: 18px">首页</span></el-menu-item>
+                    <template v-for="menu in menus">
+
+                        <el-menu-item :name="menu.id" :index="menu.path" :key="menu.id" v-if="menu.length==0">
+                            <template slot="title"><i class="el-icon-document"></i><span
+                                    style="color: black;font-weight: bold;font-size: 15px">{{menu.label}}</span>
+                            </template>
+                        </el-menu-item>
+
+                        <el-submenu  @click="goRouter(menu.path)" :key="menu.id" :index="menu.path" index="1" v-else>
+                            <template slot="title">
+                                 <span><i class="el-icon-document"></i><span
+                                         style="color: black;font-weight: bold;font-size: 15px">{{menu.label}}</span></span>
+                            </template>
+                            <!--下面的子菜单 -->
+                            <el-menu-item v-for="menu1 in menu.children" :name="menu1.id "  @click="goRouter(menu1.path)" :key="menu1.id">
+                                <span style="color: black;font-size: 15px">{{menu1.label}}</span>
+                            </el-menu-item>
+                        </el-submenu>
+
+                    </template>
                 </el-menu>
             </el-col>
-
 
             <el-col :span="20" style="height: 100%;overflow: auto;">
                 <router-view></router-view>
@@ -23,7 +37,23 @@
 </template>
 
 <script>
-    export default {}
+    import {mapActions} from 'vuex';
+
+    export default {
+        name: "manage",
+        computed: {
+            menus() {
+                return this.$store.state.main.menus;
+            },
+        },
+        methods: {
+            ...mapActions([]),
+            goRouter(path) {
+                window.console.log("-0-------------------");
+                this.$router.push(path)
+            },
+        }
+    }
 </script>
 
 <style lang="less" scoped>

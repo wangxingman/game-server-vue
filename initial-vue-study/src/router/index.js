@@ -5,22 +5,29 @@ import {$BASE} from "../const/const";
 import Login from '../views/login'
 import Home from "../views/home";
 import Manage from '../views/manage'
+import User from '../views/auth/user'
 
 Vue.use(Router)
 
 let routes = [
     {
-        path: '/',
+        path: '/manage',
         name: 'manage',
         component:Manage,
         children: [
             {
-                path: 'homeIndex',
+                path: '',
                 title: '首页',
-                name: 'homeIndex',
+                name: 'home',
                 component: Home,
+            },
+            {
+                path: '/user',
+                component: User,
+                title: '用户操作',
+                name: 'user',
             }
-        ]
+        ],
     },
     {
         path: '/login',
@@ -32,7 +39,7 @@ const router = new Router({routes});
 
 let isError = true;
 
-export const init = (axios, ElementUI) => {
+export const init = (axios) => {
     axios.defaults.baseURL = $BASE.BASE_API_URL;
     axios.defaults.headers['Cache-Control'] = "no-store";
     axios.defaults.withCredentials = true;
@@ -68,15 +75,16 @@ export const init = (axios, ElementUI) => {
 
     //返回拦截器，监听token变化
     axios.interceptors.response.use(response => {
+
         let data = response.data;
+        window.console.log("是不是"+data);
         if (data.success != null && data.success) {
             if (data.message != null) {
-                ElementUI.$notify({
+            /*    ElementUI.$notify({
                     title: '成功',
                     message: `${data.message}`,
-                    type: 'success',
                     duration: 1.5
-                });
+                });*/
             }
         } else {
             if (data.code==-1000){
@@ -84,11 +92,11 @@ export const init = (axios, ElementUI) => {
                 return
             }
             if (data.message != null) {
-                ElementUI.$notify.error({
+          /*      ElementUI.$notify.error({
                     title: '错误',
                     message: `${data.message}`,
                     duration: 1.5
-                });
+                });*/
             }
         }
         return response;
@@ -102,46 +110,46 @@ export const init = (axios, ElementUI) => {
                         store.commit('setClear');
                         // store.dispatch('mainReset');
                         router.replace({path: '/login'});
-                        ElementUI.$notify.error({
+                    /*    ElementUI.$notify.error({
                             title: '错误',
                             message: `${data.message}`,
                             duration: 1.5
-                        });
+                        });*/
                         break;
                     case 403:
                         if (data && data.message) {
                             window.console.log(403);
-                            ElementUI.$notify.error({
+                         /*   ElementUI.$notify.error({
                                 title: '错误',
                                 message: `${data.message}`,
                                 duration: 1.5
-                            });
+                            });*/
                         }
                         break;
                     case 406:
                         store.commit('setClear');
                         router.replace({path: '/login'});
-                        ElementUI.$notify.error({
+                    /*    ElementUI.$notify.error({
                             title: '错误',
                             message: `${data.message}`,
                             duration: 1.5
-                        });
+                        });*/
                         break;
                     case 500:
                         if (data && data.message) {
-                            ElementUI.$notify.error({
+                     /*       ElementUI.$notify.error({
                                 title: '错误',
                                 message: `${data.message}`,
                                 duration: 1.5
-                            });
+                            });*/
                         }
                         break;
                     default:
-                        ElementUI.$notify.error({
+                   /*     ElementUI.$notify.error({
                             title: '错误',
                             message: `${data.message}`,
                             duration: 1.5
-                        });
+                        });*/
                 }
                 setTimeout(() => {
                     isError = true;

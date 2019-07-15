@@ -14,7 +14,7 @@ import axios from 'axios';
 // };
 const login = (username,password) => {
   window.console.log(username+"-------"+password);
-  return axios.post(`/auth/fastLogin?username=${username}&password=${password}`);
+  return axios.get(`/user/fastLogin?username=${username}&password=${password}`);
 };
 
 /**

@@ -8,7 +8,7 @@
                 <div class="login_desc_two">
                     <P>欢迎来到@系统</P>
                 </div>
-                <el-form ref="form" :model="loginForm" :rules="rules" label-width="80px" class="login_from">
+                <el-form ref="loginForm" :model="loginForm" :rules="rules" label-width="80px" class="login_from">
                     <el-form-item label="账号:" style="font-family: 微软雅黑" class="login_input">
                         <el-input v-model="loginForm.username" placeholder="用户名"></el-input>
                     </el-form-item>
@@ -18,7 +18,7 @@
                     </el-form-item>
 
                     <el-form-item>
-                        <el-button type="primary" @click="handleSubmit" class="login_sumbit">登陆</el-button>
+                        <el-button type="primary" @click="handleSubmit" class="login_sumbit" >登陆</el-button>
                     </el-form-item>
                 </el-form>
             </section>
@@ -36,8 +36,16 @@
         data() {
             return {
                 loginForm: {
-                    username: "",
-                    password: ""
+                    username: "wx",
+                    password: "123456"
+                },
+                rules: {
+                    username: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                    ],
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'blur'}
+                    ],
                 },
                 showLogin: false,
             }
@@ -46,19 +54,19 @@
             this.showLogin = true;
         },
         methods: {
-            ...
-                mapActions([
+            ...mapActions([
                     'setLogin',
                     'setMenus'
                 ]),
             toIndex() {
-                this.$router.push({path: "/homeIndex"})
+                this.$router.push('manage')
             },
-            handleSubmit() {
-                this.$refs.loginForm.validate((valid) => {
+             handleSubmit() {
+                this.$refs.loginForm.validate( valid => {
                     if (valid) {
-                        this.loginSpin = true;
+                        this.loginSpin = true ;
                         loginApi.login(this.loginForm.username, this.loginForm.password).then(({data}) => {
+                            window.console.log("返回datade shuju "+data) ;
                             this.loginSpin = false;
                             if (data.success) {
                                 this.$store.commit('setLogin', true);

@@ -12,7 +12,7 @@ const findMenuByUser = () => {
  * @returns {AxiosPromise}
  */
 const findAllMenu = () => {
-  return axios.get('/menu/menus');
+  return axios.get('/menu/findByAll');
   // return axios.get('/userRole/findAll');
 };
 

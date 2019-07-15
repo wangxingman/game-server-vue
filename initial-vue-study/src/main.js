@@ -11,7 +11,7 @@ Vue.use(ElementUI, {
 });
 
 Vue.config.productionTip = false;
-init(axios, ElementUI); //重新命名
+init(axios); //重新命名
 
 Vue.config.productionTip = false
 

@@ -8,7 +8,7 @@
             <el-breadcrumb-item>活动详情</el-breadcrumb-item>
         </el-breadcrumb>
         <!-- 下拉菜单 -->
-        <el-dropdown @command="handleCommand" menu-align='start'>
+        <el-dropdown  menu-align='start'>
             <img src="../assets/img_user.png" alt="" class="head_img">
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="home">首页</el-dropdown-item>
