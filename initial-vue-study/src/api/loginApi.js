@@ -38,7 +38,7 @@ const login = (username,password) => {
  * @returns {AxiosPromise}
  */
 const logout = () => {
-  return axios.get('/loginOut');
+  return axios.get('/user/fastLoginOut');
 };
 
 

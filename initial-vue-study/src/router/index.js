@@ -5,7 +5,10 @@ import {$BASE} from "../const/const";
 import Login from '../views/login'
 import Home from "../views/home";
 import Manage from '../views/manage'
-import User from '../views/auth/user'
+import User from '../views/auth/job'
+import UpdatePass from '../views/auth/updatePass'
+import MarkDown from '../views/components/MarkDown'
+import RichText from '../views/components/RichText'
 
 Vue.use(Router)
 
@@ -13,20 +16,43 @@ let routes = [
     {
         path: '/manage',
         name: 'manage',
-        component:Manage,
+        component: Manage,
         children: [
             {
                 path: '',
                 title: '首页',
                 name: 'home',
                 component: Home,
+                meta: [],
             },
             {
                 path: '/user',
                 component: User,
                 title: '用户操作',
                 name: 'user',
-            }
+                meta: ['添加数据', '添加用户'],
+            },
+            {
+                path: '/UpdatePass',
+                component: UpdatePass,
+                title: '修改密码',
+                name: 'UpdatePass',
+                meta: ['修改数据', '修改密码'],
+            },
+            {
+                path: '/components/markDown',
+                component: MarkDown,
+                title: 'markDown文本',
+                name: 'MarkDown',
+                meta: ['文本文档', 'markDown文本'],
+            },
+            {
+                path: '/components/Editor',
+                component: RichText,
+                title: '富文本',
+                name: 'RichText',
+                meta: ['文本文档', '富文本'],
+            },
         ],
     },
     {
@@ -49,7 +75,7 @@ export const init = (axios) => {
             if (!login) {
                 next('/login');
             } else {
-                if (to.path != '/login'&&to.path != '/') {
+                if (to.path != '/login' && to.path != '/') {
                     next();
                 } else {
                     next({
@@ -77,26 +103,26 @@ export const init = (axios) => {
     axios.interceptors.response.use(response => {
 
         let data = response.data;
-        window.console.log("是不是"+data);
+        window.console.log("是不是" + data);
         if (data.success != null && data.success) {
             if (data.message != null) {
-            /*    ElementUI.$notify({
-                    title: '成功',
-                    message: `${data.message}`,
-                    duration: 1.5
-                });*/
+                /*    ElementUI.$notify({
+                        title: '成功',
+                        message: `${data.message}`,
+                        duration: 1.5
+                    });*/
             }
         } else {
-            if (data.code==-1000){
+            if (data.code == -1000) {
                 router.replace({path: '/login'});
                 return
             }
             if (data.message != null) {
-          /*      ElementUI.$notify.error({
-                    title: '错误',
-                    message: `${data.message}`,
-                    duration: 1.5
-                });*/
+                /*      ElementUI.$notify.error({
+                          title: '错误',
+                          message: `${data.message}`,
+                          duration: 1.5
+                      });*/
             }
         }
         return response;
@@ -110,46 +136,46 @@ export const init = (axios) => {
                         store.commit('setClear');
                         // store.dispatch('mainReset');
                         router.replace({path: '/login'});
-                    /*    ElementUI.$notify.error({
-                            title: '错误',
-                            message: `${data.message}`,
-                            duration: 1.5
-                        });*/
-                        break;
-                    case 403:
-                        if (data && data.message) {
-                            window.console.log(403);
-                         /*   ElementUI.$notify.error({
+                        /*    ElementUI.$notify.error({
                                 title: '错误',
                                 message: `${data.message}`,
                                 duration: 1.5
                             });*/
+                        break;
+                    case 403:
+                        if (data && data.message) {
+                            window.console.log(403);
+                            /*   ElementUI.$notify.error({
+                                   title: '错误',
+                                   message: `${data.message}`,
+                                   duration: 1.5
+                               });*/
                         }
                         break;
                     case 406:
                         store.commit('setClear');
                         router.replace({path: '/login'});
-                    /*    ElementUI.$notify.error({
-                            title: '错误',
-                            message: `${data.message}`,
-                            duration: 1.5
-                        });*/
-                        break;
-                    case 500:
-                        if (data && data.message) {
-                     /*       ElementUI.$notify.error({
+                        /*    ElementUI.$notify.error({
                                 title: '错误',
                                 message: `${data.message}`,
                                 duration: 1.5
                             });*/
+                        break;
+                    case 500:
+                        if (data && data.message) {
+                            /*       ElementUI.$notify.error({
+                                       title: '错误',
+                                       message: `${data.message}`,
+                                       duration: 1.5
+                                   });*/
                         }
                         break;
                     default:
-                   /*     ElementUI.$notify.error({
-                            title: '错误',
-                            message: `${data.message}`,
-                            duration: 1.5
-                        });*/
+                    /*     ElementUI.$notify.error({
+                             title: '错误',
+                             message: `${data.message}`,
+                             duration: 1.5
+                         });*/
                 }
                 setTimeout(() => {
                     isError = true;

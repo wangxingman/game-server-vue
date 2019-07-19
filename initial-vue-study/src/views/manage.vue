@@ -8,19 +8,19 @@
                             style="color: black;font-weight: bold;font-size: 18px">首页</span></el-menu-item>
                     <template v-for="menu in menus">
 
-                        <el-menu-item :name="menu.id" :index="menu.path" :key="menu.id" v-if="menu.length==0">
+                        <el-menu-item  :index="menu.id.toString()"  @click="goRouter(menu.path)" v-if="menu.length==0"   v-bind:key="menu.id">
                             <template slot="title"><i class="el-icon-document"></i><span
                                     style="color: black;font-weight: bold;font-size: 15px">{{menu.label}}</span>
                             </template>
                         </el-menu-item>
 
-                        <el-submenu  @click="goRouter(menu.path)" :key="menu.id" :index="menu.path" index="1" v-else>
+                        <el-submenu :index="menu.id.toString()"  @click="goRouter(menu.path)" v-bind:key="menu.id" v-else >
                             <template slot="title">
                                  <span><i class="el-icon-document"></i><span
                                          style="color: black;font-weight: bold;font-size: 15px">{{menu.label}}</span></span>
                             </template>
                             <!--下面的子菜单 -->
-                            <el-menu-item v-for="menu1 in menu.children" :name="menu1.id "  @click="goRouter(menu1.path)" :key="menu1.id">
+                            <el-menu-item v-for="menu1 in menu.children" @click="goRouter(menu1.path)" :index="menu.id.toString()" v-bind:key="menu1.id" >
                                 <span style="color: black;font-size: 15px">{{menu1.label}}</span>
                             </el-menu-item>
                         </el-submenu>
@@ -28,7 +28,6 @@
                     </template>
                 </el-menu>
             </el-col>
-
             <el-col :span="20" style="height: 100%;overflow: auto;">
                 <router-view></router-view>
             </el-col>

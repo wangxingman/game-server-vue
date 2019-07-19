@@ -9,7 +9,7 @@
         </el-select>
 
         <el-button class="filter-item" style="display: inline-block;margin: 0px 4px;height: 40px;" size="mini"
-                   type="success" icon="el-icon-search" @click="">搜索
+                   type="success" icon="el-icon-search" @click="searchUser">搜索
         </el-button>
 
         <div style="display: inline-block;margin: 0px 4px;">
@@ -19,15 +19,15 @@
                     size="mini"
                     type="primary"
                     icon="el-icon-plus"
-                    @click="">新增
+                    @click="addUser">新增
             </el-button>
+            <eForm ref="form" :is-add="true" ></eForm>
         </div>
 
         <!-- 导出 -->
         <div style="display: inline-block;">
             <el-button
                     style="height: 40px"
-                    v-permission="['ADMIN']"
                     :loading="false"
                     size="mini"
                     class="filter-item"
@@ -42,8 +42,15 @@
 </template>
 
 <script>
+    import {parseTime} from '../../../utils/index'
+    import eForm from './form'
+    import JobApi from '../../../api/jobApi'
+
     export default {
         name: "top",
+        components: {
+            eForm
+        },
         data() {
             return {
                 enabledTypeOptions: [
@@ -55,20 +62,33 @@
             }
         },
         props: {
+            dicts: {
+                type: Array,
+                required: true
+            }  ,
             sup_this: {
-                type: Object,
+                type: Array,
                 required: true
             },
         },
         methods: {
+            searchUser() {
+                this.$message({
+                    message: '警告哦，功能占位开放！',
+                    type: 'warning'
+                });
+            },
+            addUser() {
+              this.$refs.form.dialog = true
+            },
             download() {
                 this.downloadLoading = true
                 import('../../../vendor/Export2Excel').then(excel => {
                     //导出的头
-                    const tHeader = ['ID', '用户名', '邮箱', '头像地址', '状态', '注册日期', '最后修改密码日期']
+                    const tHeader = ['名称', '排序', '状态', '创建日期']
                     //对应的字段
-                    const filterVal = ['id', 'username', 'email', 'avatar', 'enabled', 'createTime', 'lastPasswordResetTime']
-                    const data = this.formatJson(filterVal, this.sup_this.data)
+                    const filterVal = ['name', 'sort', 'enabled', 'createTime']
+                    const data = this.formatJson(filterVal, this.sup_this)
                     excel.export_json_to_excel({
                         header: tHeader,
                         data,
@@ -79,6 +99,7 @@
             },
             // 数据转换
             formatJson(filterVal, jsonData) {
+                window.console.log("------"+filterVal+"---------++++++++++++"+jsonData);
                 return jsonData.map(v => filterVal.map(j => {
                     if (j === 'createTime' || j === 'lastPasswordResetTime') {
                         return parseTime(v[j])
