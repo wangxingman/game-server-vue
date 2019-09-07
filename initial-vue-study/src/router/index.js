@@ -5,10 +5,11 @@ import {$BASE} from "../const/const";
 import Login from '../views/login'
 import Home from "../views/home";
 import Manage from '../views/manage'
-import User from '../views/auth/job'
+import Job from '../views/auth/job'
 import UpdatePass from '../views/auth/updatePass'
 import MarkDown from '../views/components/MarkDown'
 import RichText from '../views/components/RichText'
+import Role from '../views/auth/role'
 
 Vue.use(Router)
 
@@ -26,11 +27,18 @@ let routes = [
                 meta: [],
             },
             {
-                path: '/user',
-                component: User,
+                path: '/job',
+                component: Job,
                 title: '用户操作',
-                name: 'user',
-                meta: ['添加数据', '添加用户'],
+                name: 'job ',
+                meta: ['添加数据', '添加岗位'],
+            },
+            {
+                path: '/role',
+                component: Role,
+                title: '用户操作',
+                name: 'role',
+                meta: ['添加数据', '添加角色'],
             },
             {
                 path: '/UpdatePass',

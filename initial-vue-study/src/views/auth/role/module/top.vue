@@ -3,11 +3,6 @@
         <!--搜索-->
         <el-input placeholder="输入岗位名称搜索"
                   style="width: 200px;display: inline-block;margin: 20px 4px 0px 30px;"></el-input>
-        <el-select v-model="value" clearable placeholder="状态" class="filter-item"
-                   style="width: 90px;display: inline-block;margin: 0px 4px;">
-            <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-        </el-select>
-
         <el-button class="filter-item" style="display: inline-block;margin: 0px 4px;height: 40px;" size="mini"
                    type="success" icon="el-icon-search" @click="searchUser">搜索
         </el-button>
@@ -24,25 +19,11 @@
             <eForm ref="form" :is-add="true" ></eForm>
         </div>
 
-        <!-- 导出 -->
-        <div style="display: inline-block;">
-            <el-button
-                    style="height: 40px"
-                    :loading="false"
-                    size="mini"
-                    class="filter-item"
-                    type="warning"
-                    icon="el-icon-download"
-                    @click="download">导出
-            </el-button>
-        </div>
-        <!--下面就是表单-->
-
     </div>
 </template>
 
 <script>
-    import {parseTime} from '../../../utils/index'
+    import {parseTime} from '../../../../utils/index'
     import eForm from './form'
 
     export default {
@@ -60,16 +41,6 @@
                 downloadLoading: false,
             }
         },
-        props: {
-            dicts: {
-                type: Array,
-                required: true
-            }  ,
-            sup_this: {
-                type: Array,
-                required: true
-            },
-        },
         methods: {
             searchUser() {
                 this.$message({
@@ -78,11 +49,11 @@
                 });
             },
             addUser() {
-              this.$refs.form.dialog = true
+                this.$refs.form.dialog = true
             },
             download() {
                 this.downloadLoading = true
-                import('../../../vendor/Export2Excel').then(excel => {
+                import('../../../../vendor/Export2Excel').then(excel => {
 
                     //导出的头
                     const tHeader = ['名称', '排序', '状态', '创建日期']
