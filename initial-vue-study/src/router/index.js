@@ -10,6 +10,7 @@ import UpdatePass from '../views/auth/updatePass'
 import MarkDown from '../views/components/MarkDown'
 import RichText from '../views/components/RichText'
 import Role from '../views/auth/role'
+import permission from '../views/auth/permission'
 
 Vue.use(Router)
 
@@ -29,9 +30,16 @@ let routes = [
             {
                 path: '/job',
                 component: Job,
-                title: '用户操作',
+                title: '角色操作',
                 name: 'job ',
                 meta: ['添加数据', '添加岗位'],
+            },
+            {
+                path: '/permission',
+                component: permission,
+                title: '权限操作',
+                name: 'permission ',
+                meta: ['添加数据', '添加权限'],
             },
             {
                 path: '/role',

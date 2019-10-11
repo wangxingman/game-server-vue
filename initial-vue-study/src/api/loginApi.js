@@ -41,8 +41,13 @@ const logout = () => {
   return axios.get('/user/fastLoginOut');
 };
 
+/**获取验证码信息*/
+const getCode = () => {
+  return axios.get('/user/getCode');
+}
 
 export default {
   login,
   logout,
+  getCode
 }

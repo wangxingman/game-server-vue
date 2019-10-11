@@ -17,8 +17,18 @@
                         <el-input v-model="loginForm.password" placeholder="密码"></el-input>
                     </el-form-item>
 
+                    <el-form-item prop="code">
+                        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 60%">
+                            <div class="login-code">
+                                <img :src="codeUrl" @click="getCode">
+                            </div>
+                        </el-input>
+                    </el-form-item>
+                    <!--记住自己-->
+                    <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+
                     <el-form-item>
-                        <el-button type="primary" @click="handleSubmit" class="login_sumbit" >登陆</el-button>
+                        <el-button type="primary" @click="handleSubmit" class="login_sumbit">登陆</el-button>
                     </el-form-item>
                 </el-form>
             </section>
@@ -30,14 +40,19 @@
     import {mapActions} from 'vuex';
     import loginApi from '../api/loginApi';
     import menuApi from '../api/menuApi';
-
+    import Cookies from 'js-cookie';
+    import Config from '../config';
 
     export default {
         data() {
             return {
+                codeUrl: '',
                 loginForm: {
                     username: "wx",
-                    password: "123456"
+                    password: "123456",
+                    code: '',
+                    uuid: "" ,
+                    rememberMe:false
                 },
                 rules: {
                     username: [
@@ -46,28 +61,62 @@
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'}
                     ],
+                    code: [
+                        {required: true, trigger: 'change', message: '验证码不能为空'}
+                    ]
                 },
                 showLogin: false,
             }
+        },
+        created() {
+            this.getCode();
+            this.getCookie();
         },
         mounted() {
             this.showLogin = true;
         },
         methods: {
             ...mapActions([
-                    'setLogin',
-                    'setMenus'
-                ]),
+                'setLogin',
+                'setMenus'
+            ]),
             toIndex() {
                 this.$router.push('manage')
             },
-             handleSubmit() {
-                this.$refs.loginForm.validate( valid => {
+            getCode() {
+                loginApi.getCode().then(res => {
+                    this.codeUrl = 'data:image/gif;base64,' + res.img
+                    this.loginForm.uuid = res.uuid
+                })
+            },
+            getCookie() {
+                const username = Cookies.get('username')
+                let password = Cookies.get('password')
+                const rememberMe = Cookies.get('rememberMe')
+                password = password === undefined ? this.loginForm.password : password
+                this.loginForm = {
+                    username: username === undefined ? this.loginForm.username : username,
+                    password: password,
+                    rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+                    code: ''
+                }
+            },
+            handleSubmit() {
+                this.$refs.loginForm.validate(valid => {
                     if (valid) {
-                        this.loginSpin = true ;
+
+                        const user = this.loginForm
+                        if (user.rememberMe) {
+                            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
+                            Cookies.set('password', user.password, { expires: Config.passCookieExpires })
+                            Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
+                        } else {
+                            Cookies.remove('username')
+                            Cookies.remove('password')
+                            Cookies.remove('rememberMe')
+                        }
                         loginApi.login(this.loginForm.username, this.loginForm.password).then(({data}) => {
-                            window.console.log("返回datade shuju "+data) ;
-                            this.loginSpin = false;
+                            window.console.log("返回datade shuju " + data);
                             if (data.success) {
                                 this.$store.commit('setLogin', true);
                                 this.$store.commit('setUserInfo', data.data);
@@ -78,11 +127,10 @@
                                         this.toIndex();
                                     }
                                 });
-                            }
-                        }, () => {
-                            this.loginSpin = false;
+                            }                  ``
                         });
                     } else {
+                        this.getCode()
                         this.$notify.error({
                             title: '错误',
                             message: '请输入正确的用户名密码',

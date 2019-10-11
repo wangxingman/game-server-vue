@@ -348,7 +348,7 @@
                     }
                 }).catch(err => {
                     this.menuLoading = false
-                    console.log(err.response.data.message)
+                    window.console.log(err.response.data.message)
                 })
             },
         }
